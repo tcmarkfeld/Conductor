@@ -1,5 +1,4 @@
 using Conductor.Core;
-using Conductor.Emitters.IamJson;
 
 namespace Conductor.Emitters.IamJson.Tests;
 

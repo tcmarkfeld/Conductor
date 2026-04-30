@@ -3,6 +3,7 @@
     <ProjectReference Include="..\Conductor.Core\Conductor.Core.csproj" />
     <ProjectReference Include="..\Conductor.Analyzers.CSharp\Conductor.Analyzers.CSharp.csproj" />
     <ProjectReference Include="..\Conductor.Emitters.IamJson\Conductor.Emitters.IamJson.csproj" />
+    <ProjectReference Include="..\Conductor.Emitters.Terraform\Conductor.Emitters.Terraform.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>conductor</ToolCommandName>
     <PackageId>Conductor.Tool</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Conductor Contributors</Authors>
     <Description>MassTransit least-privilege IAM policy generator for AWS SQS/SNS.</Description>
     <PackageTags>masstransit;aws;iam;sqs;sns;security;least-privilege</PackageTags>

@@ -90,7 +90,7 @@ conductor generate --repo <path> --out <path> [options]
 ### Optional flags
 
 - `--scope` `repo|folder`. Default: `repo`
-- `--format` Output format. Default: `iam-json`
+- `--format` Output format (`iam-json` or `terraform`). Default: `iam-json`
 - `--strict` `true|false`. Default: `true`
 - `--region` ARN region token/value. Default: `${region}`
 - `--account-id` ARN account token/value. Default: `${account_id}`
@@ -129,7 +129,7 @@ dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
 
 ```bash
 dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
-  --repo /Users/me/source/fp-api \
+  --repo /Users/me/source/repos/<repo-name> \
   --scope folder \
   --out ./policies \
   --strict false
@@ -140,6 +140,8 @@ This creates files like:
 - `./policies/Company.Api.policy.json`
 - `./policies/Company.BlogAgent.policy.json`
 - etc. (for folders where MassTransit SQS/SNS usage is detected)
+
+When `--format terraform` is selected, generated files use `.policy.tf`.
 
 ## Strict mode behavior
 
@@ -157,8 +159,8 @@ dotnet test Conductor.slnx -c Release
 
 ## Output
 
-- `scope=repo`: one IAM policy document (`Version: 2012-10-17`)
-- `scope=folder`: one IAM policy document per top-level folder in repo
+- `scope=repo`: one policy output at `--out` path (JSON for `iam-json`, HCL for `terraform`)
+- `scope=folder`: one policy output per top-level folder in repo (`.policy.json` for `iam-json`, `.policy.tf` for `terraform`)
 
 ## Current limitations
 

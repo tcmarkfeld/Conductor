@@ -1,6 +1,10 @@
 using Conductor.Analyzers.CSharp;
 using Conductor.Core;
 using Conductor.Emitters.IamJson;
+using Conductor.Emitters.Terraform;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Conductor.Cli.Tests")]
 
 var exitCode = await MainAsync(args);
 return exitCode;
@@ -25,6 +29,7 @@ static Task<int> MainAsync(string[] args)
     IPolicyEmitter emitter = parsed.Format switch
     {
         "iam-json" => new IamJsonPolicyEmitter(),
+        "terraform" => new TerraformPolicyEmitter(),
         _ => throw new InvalidOperationException($"Unsupported format: {parsed.Format}")
     };
 
@@ -47,9 +52,9 @@ static int GenerateSingle(CliArgs parsed, IPolicyEmitter emitter)
     }
 
     var emitOptions = new EmitOptions(parsed.Region, parsed.AccountId, parsed.Env);
-    var json = emitter.Emit(topology, emitOptions);
+    var output = emitter.Emit(topology, emitOptions);
 
-    File.WriteAllText(parsed.OutputPath!, json + Environment.NewLine);
+    File.WriteAllText(parsed.OutputPath!, output + Environment.NewLine);
     Console.WriteLine($"Wrote policy to {parsed.OutputPath}");
     Console.WriteLine($"Queues: {topology.Queues.Count}, Topics: {topology.Topics.Count}, Services: {topology.Services.Count}");
     return 0;
@@ -85,9 +90,10 @@ static int GeneratePerFolder(CliArgs parsed, IPolicyEmitter emitter)
             continue;
         }
 
-        var json = emitter.Emit(topology, emitOptions);
-        var outputFile = Path.Combine(parsed.OutputPath!, $"{SanitizeFileName(folderName)}.policy.json");
-        File.WriteAllText(outputFile, json + Environment.NewLine);
+        var output = emitter.Emit(topology, emitOptions);
+        var fileExtension = CliOutputPath.GetPolicyExtension(parsed.Format);
+        var outputFile = Path.Combine(parsed.OutputPath!, $"{CliOutputPath.SanitizeFileName(folderName)}.policy.{fileExtension}");
+        File.WriteAllText(outputFile, output + Environment.NewLine);
         Console.WriteLine($"Wrote {outputFile} (Queues: {topology.Queues.Count}, Topics: {topology.Topics.Count}, Services: {topology.Services.Count})");
         generated++;
     }
@@ -162,12 +168,6 @@ static bool PrintDiagnostics(TransportTopology topology, bool strict, string? sc
     return true;
 }
 
-static string SanitizeFileName(string folderName)
-{
-    var invalidChars = Path.GetInvalidFileNameChars();
-    return string.Concat(folderName.Select(ch => invalidChars.Contains(ch) ? '_' : ch));
-}
-
 internal sealed record CliArgs(
     string Command,
     string? RepoPath,
@@ -183,7 +183,7 @@ internal sealed record CliArgs(
 {
     public const string HelpText = """
 Usage:
-  conductor generate --repo /path --out policy.json [--scope repo|folder] [--format iam-json] [--strict true|false] [--region value] [--account-id value] [--env value]
+  conductor generate --repo /path --out policy.json [--scope repo|folder] [--format iam-json|terraform] [--strict true|false] [--region value] [--account-id value] [--env value]
 
 Notes:
   scope=repo   -> --out is a file path
@@ -230,7 +230,7 @@ Notes:
                     output = value;
                     break;
                 case "--format":
-                    format = value;
+                    format = value.ToLowerInvariant();
                     break;
                 case "--scope":
                     scope = value;
@@ -271,9 +271,31 @@ Notes:
             return Invalid("--scope must be repo or folder");
         }
 
+        if (!string.Equals(format, "iam-json", StringComparison.Ordinal) &&
+            !string.Equals(format, "terraform", StringComparison.Ordinal))
+        {
+            return Invalid("--format must be iam-json or terraform");
+        }
+
         return new CliArgs(command, Path.GetFullPath(repo), Path.GetFullPath(output), scope.ToLowerInvariant(), format, strict, region, accountId, env, true, null);
     }
 
     private static CliArgs Invalid(string message)
         => new("", null, null, "repo", "iam-json", true, "${region}", "${account_id}", "${env}", false, message);
+}
+
+internal static class CliOutputPath
+{
+    internal static string SanitizeFileName(string folderName)
+    {
+        var invalidChars = Path.GetInvalidFileNameChars();
+        return string.Concat(folderName.Select(ch => invalidChars.Contains(ch) ? '_' : ch));
+    }
+
+    internal static string GetPolicyExtension(string format) => format switch
+    {
+        "iam-json" => "json",
+        "terraform" => "tf",
+        _ => throw new InvalidOperationException($"Unsupported format: {format}")
+    };
 }

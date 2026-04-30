@@ -1,4 +1,3 @@
-using Conductor.Analyzers.CSharp;
 using Conductor.Core;
 
 namespace Conductor.Analyzers.CSharp.Tests;

@@ -1,5 +1,3 @@
-using Conductor.Core;
-
 namespace Conductor.Core.Tests;
 
 public sealed class CoreModelTests

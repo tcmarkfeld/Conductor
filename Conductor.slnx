@@ -4,10 +4,13 @@
     <Project Path="src/Conductor.Cli/Conductor.Cli.csproj" />
     <Project Path="src/Conductor.Core/Conductor.Core.csproj" />
     <Project Path="src/Conductor.Emitters.IamJson/Conductor.Emitters.IamJson.csproj" />
+    <Project Path="src/Conductor.Emitters.Terraform/Conductor.Emitters.Terraform.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Conductor.Analyzers.CSharp.Tests/Conductor.Analyzers.CSharp.Tests.csproj" />
     <Project Path="tests/Conductor.Core.Tests/Conductor.Core.Tests.csproj" />
     <Project Path="tests/Conductor.Emitters.IamJson.Tests/Conductor.Emitters.IamJson.Tests.csproj" />
+    <Project Path="tests/Conductor.Emitters.Terraform.Tests/Conductor.Emitters.Terraform.Tests.csproj" />
+    <Project Path="tests/Conductor.Cli.Tests/Conductor.Cli.Tests.csproj" />
   </Folder>
 </Solution>
