@@ -2,7 +2,7 @@
 
 `Conductor` is a CLI tool that scans C# MassTransit + Amazon SQS/SNS configuration and generates a least-privilege IAM policy JSON.
 
-## What it does (v1)
+## What it does
 
 - Scans a repo for MassTransit Amazon SQS usage.
 - Detects queues/topics from common patterns:
@@ -15,7 +15,7 @@
   - string literals
   - `const` values
   - simple `.Replace("{{env}}", ...)` patterns
-- Outputs deterministic IAM JSON policy.
+- Outputs deterministic IAM JSON policy or Terraform (depending on the `--format` you select).
 
 ## Requirements
 
