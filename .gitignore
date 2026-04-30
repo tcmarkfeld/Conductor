@@ -1,0 +1,28 @@
+# Build output
+bin/
+obj/
+
+# Test output
+TestResults/
+*.trx
+
+# User/IDE files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local tool/runtime caches
+.dotnet-home/
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+packages/

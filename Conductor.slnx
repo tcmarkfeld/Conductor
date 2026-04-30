@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Conductor.Analyzers.CSharp/Conductor.Analyzers.CSharp.csproj" />
+    <Project Path="src/Conductor.Cli/Conductor.Cli.csproj" />
+    <Project Path="src/Conductor.Core/Conductor.Core.csproj" />
+    <Project Path="src/Conductor.Emitters.IamJson/Conductor.Emitters.IamJson.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Conductor.Analyzers.CSharp.Tests/Conductor.Analyzers.CSharp.Tests.csproj" />
+    <Project Path="tests/Conductor.Core.Tests/Conductor.Core.Tests.csproj" />
+    <Project Path="tests/Conductor.Emitters.IamJson.Tests/Conductor.Emitters.IamJson.Tests.csproj" />
+  </Folder>
+</Solution>

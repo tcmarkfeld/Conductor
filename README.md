@@ -50,7 +50,7 @@ dotnet ./src/Conductor.Cli/bin/Release/net10.0/Conductor.dll generate \
 ## Command
 
 ```text
-transitpolicy generate --repo <path> --out <path> [options]
+conductor generate --repo <path> --out <path> [options]
 ```
 
 ### Required flags
@@ -74,7 +74,7 @@ transitpolicy generate --repo <path> --out <path> [options]
 ### 1) Default tokenized output
 
 ```bash
-dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
+dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
   --repo /Users/me/source/my-service \
   --out ./policy.json
 ```
@@ -82,7 +82,7 @@ dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
 ### 2) Concrete account + region in ARNs
 
 ```bash
-dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
+dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
   --repo /Users/me/source/my-service \
   --out ./policy.prod.json \
   --region us-east-2 \
@@ -92,7 +92,7 @@ dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
 ### 3) Non-strict mode (warn and continue)
 
 ```bash
-dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
+dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
   --repo /Users/me/source/my-service \
   --out ./policy.json \
   --strict false
@@ -101,7 +101,7 @@ dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
 ### 4) Monorepo mode (one policy per top-level folder)
 
 ```bash
-dotnet ./src/TransitPolicy.Cli/bin/Release/net10.0/transitpolicy.dll generate \
+dotnet ./src/Conductor.Cli/bin/Release/net10.0/conductor.dll generate \
   --repo /Users/me/source/fp-api \
   --scope folder \
   --out ./policies \
@@ -125,7 +125,7 @@ When `--strict true`:
 ## Test
 
 ```bash
-dotnet test TransitPolicy.slnx -c Release
+dotnet test Conductor.slnx -c Release
 ```
 
 ## Output
@@ -149,4 +149,3 @@ dotnet test TransitPolicy.slnx -c Release
 2. Add/adjust tests
 3. Run build + tests
 4. Open PR
-# Conductor
