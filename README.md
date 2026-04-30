@@ -28,15 +28,6 @@ Check version:
 dotnet --version
 ```
 
-## Install / Build
-
-From repo root:
-
-```bash
-dotnet restore Conductor.slnx
-dotnet build Conductor.slnx -c Release
-```
-
 ## Install From NuGet (Global Tool)
 
 Install:
@@ -55,6 +46,15 @@ Uninstall:
 
 ```bash
 dotnet tool uninstall -g Conductor.Tool
+```
+
+## Install From Repository
+
+From repo root:
+
+```bash
+dotnet restore Conductor.slnx
+dotnet build Conductor.slnx -c Release
 ```
 
 Run after install:
@@ -162,6 +162,113 @@ dotnet test Conductor.slnx -c Release
 - `scope=repo`: one policy output at `--out` path (JSON for `iam-json`, HCL for `terraform`)
 - `scope=folder`: one policy output per top-level folder in repo (`.policy.json` for `iam-json`, `.policy.tf` for `terraform`)
 
+## Sample generated output
+
+Example input assumptions:
+
+- queue detected: `order-submit`
+- topic detected: `order-events`
+- default tokenized ARN parts: `region=${region}`, `account_id=${account_id}`
+- fault publish behavior enabled (so MassTransit fault topics are included)
+
+### IAM JSON (`--format iam-json`)
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "SqsManageQueues",
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ChangeMessageVisibility",
+        "sqs:CreateQueue",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl",
+        "sqs:PurgeQueue",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage",
+        "sqs:SetQueueAttributes",
+        "sqs:TagQueue"
+      ],
+      "Resource": [
+        "arn:aws:sqs:${region}:${account_id}:order-submit",
+        "arn:aws:sqs:${region}:${account_id}:order-submit_error",
+        "arn:aws:sqs:${region}:${account_id}:order-submit_skipped"
+      ]
+    },
+    {
+      "Sid": "SnsManageTopics",
+      "Effect": "Allow",
+      "Action": [
+        "sns:CreateTopic",
+        "sns:GetTopicAttributes",
+        "sns:Publish",
+        "sns:SetTopicAttributes",
+        "sns:Subscribe",
+        "sns:TagResource",
+        "sns:Unsubscribe"
+      ],
+      "Resource": [
+        "arn:aws:sns:${region}:${account_id}:MassTransit-Fault*",
+        "arn:aws:sns:${region}:${account_id}:MassTransit-ReceiveFault",
+        "arn:aws:sns:${region}:${account_id}:order-events"
+      ]
+    }
+  ]
+}
+```
+
+### Terraform HCL (`--format terraform`)
+
+```tf
+data "aws_iam_policy_document" "conductor_sqs" {
+  statement {
+    sid    = "SqsManageQueues"
+    effect = "Allow"
+    actions = [
+      "sqs:ChangeMessageVisibility",
+      "sqs:CreateQueue",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:PurgeQueue",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage",
+      "sqs:SetQueueAttributes",
+      "sqs:TagQueue",
+    ]
+    resources = [
+      "arn:aws:sqs:${region}:${account_id}:order-submit",
+      "arn:aws:sqs:${region}:${account_id}:order-submit_error",
+      "arn:aws:sqs:${region}:${account_id}:order-submit_skipped",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "conductor_sns" {
+  statement {
+    sid    = "SnsManageTopics"
+    effect = "Allow"
+    actions = [
+      "sns:CreateTopic",
+      "sns:GetTopicAttributes",
+      "sns:Publish",
+      "sns:SetTopicAttributes",
+      "sns:Subscribe",
+      "sns:TagResource",
+      "sns:Unsubscribe",
+    ]
+    resources = [
+      "arn:aws:sns:${region}:${account_id}:MassTransit-Fault*",
+      "arn:aws:sns:${region}:${account_id}:MassTransit-ReceiveFault",
+      "arn:aws:sns:${region}:${account_id}:order-events",
+    ]
+  }
+}
+```
+
 ## Current limitations
 
 - Focused on common MassTransit SQS/SNS patterns (not every dynamic/metaprogrammed style).
@@ -169,7 +276,6 @@ dotnet test Conductor.slnx -c Release
 
 ## Roadmap (planned)
 
-- Terraform output emitter using same intermediate topology model.
 - Expanded analyzer coverage for additional MassTransit patterns.
 
 ## Contributing
