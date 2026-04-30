@@ -5,10 +5,26 @@
     <ProjectReference Include="..\Conductor.Emitters.IamJson\Conductor.Emitters.IamJson.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>conductor</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>conductor</ToolCommandName>
+    <PackageId>Conductor.Tool</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Conductor Contributors</Authors>
+    <Description>MassTransit least-privilege IAM policy generator for AWS SQS/SNS.</Description>
+    <PackageTags>masstransit;aws;iam;sqs;sns;security;least-privilege</PackageTags>
+    <PackageProjectUrl>https://github.com/tcmarkfeld/Conductor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tcmarkfeld/Conductor</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

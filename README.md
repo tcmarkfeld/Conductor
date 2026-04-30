@@ -37,6 +37,33 @@ dotnet restore Conductor.slnx
 dotnet build Conductor.slnx -c Release
 ```
 
+## Install From NuGet (Global Tool)
+
+Install:
+
+```bash
+dotnet tool install -g Conductor.Tool
+```
+
+Update:
+
+```bash
+dotnet tool update -g Conductor.Tool
+```
+
+Uninstall:
+
+```bash
+dotnet tool uninstall -g Conductor.Tool
+```
+
+Run after install:
+
+```bash
+conductor --help
+conductor generate --repo /absolute/path/to/repo --out ./policy.json
+```
+
 ## Run
 
 Use the built CLI:
